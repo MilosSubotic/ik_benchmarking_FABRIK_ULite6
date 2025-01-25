@@ -3,10 +3,14 @@
 
 import os
 import glob
+import shutil
 import yaml
 from ament_index_python.packages import get_package_share_directory
 
 import subprocess
+
+import rclpy
+from rclpy.node import Node
 
 
 def load_benchmarking_config(ik_benchmarking_pkg, ik_benchmarking_config):
@@ -30,16 +34,22 @@ def load_benchmarking_config(ik_benchmarking_pkg, ik_benchmarking_config):
 
     return ik_solver_names
 
-
 def main():
     # Print the path where the resulting files will be saved
-    directory_path = os.getcwd()
+    rclpy.init(args=None)
+    node = Node("data_generator_node")
+    node.declare_parameter("data_directory", os.getcwd())
+    data_directory = (
+        node.get_parameter("data_directory").get_parameter_value().string_value
+    )
 
     print(f"\n{'=' * 60}")
     print(
-        f"\nThe benchmarking CSV files will be saved in the directory:\n\n{directory_path}"
+        f"\nThe benchmarking CSV files will be saved in the directory:\n\n{data_directory}"
     )
     print(f"\n{'=' * 60}")
+
+    os.makedirs(data_directory, exist_ok = True)
 
     # Load IK solvers data from ik_benchmarking.yaml file
     ik_benchmarking_pkg = "ik_benchmarking"
@@ -49,9 +59,9 @@ def main():
     )
 
     # Check if previous resulting CSV files already exist in the current directory
-    current_csv_filenames = glob.glob("*.csv")
+    current_csv_filenames = glob.glob(os.path.join(data_directory, "*.csv"))
     result_csv_filenames = [
-        ik_solver_name + "_ik_benchmarking_data.csv"
+        os.path.join(data_directory, ik_solver_name + "_ik_benchmarking_data.csv")
         for ik_solver_name in ik_solver_names
     ]
     conflict_csv_filenames = []
@@ -95,6 +105,10 @@ def main():
 
         # Wait indefinitely for completion to ensure sequential processing
         process.communicate()
+
+        # Copy result csv to data directory.
+        for csv in glob.glob("*_ik_benchmarking_data.csv"):
+            shutil.move(csv, data_directory)
 
 
 if __name__ == "__main__":
