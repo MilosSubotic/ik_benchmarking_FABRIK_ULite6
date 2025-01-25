@@ -2,7 +2,7 @@ repositories:
   # Example MoveIt config package
   moveit_resources:
     type: git
-    url: https://github.com/ros-planning/moveit_resources.git
+    url: https://github.com/MilosSubotic/moveit_resources_ULite6
     version: ros2
   # IK Solvers
   trac_ik:
@@ -12,4 +12,8 @@ repositories:
   bio_ik:
     type: git
     url: https://github.com/PickNikRobotics/bio_ik.git
+    version: ros2
+  pick_ik:
+    type: git
+    url: https://github.com/PickNikRobotics/pick_ik
     version: ros2
