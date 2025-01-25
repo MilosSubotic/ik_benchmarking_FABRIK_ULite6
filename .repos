@@ -1,6 +1,6 @@
 repositories:
   # Example MoveIt config package
-  moveit_resources:
+  moveit_resources_ULite6:
     type: git
     url: https://github.com/MilosSubotic/moveit_resources_ULite6
     version: ros2
