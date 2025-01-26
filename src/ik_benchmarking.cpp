@@ -58,7 +58,8 @@ void IKBenchmarking::gather_data() {
             }
         }
         ss << "]";
-        RCLCPP_DEBUG(logger_, "The sampled random joint values are:\n%s\n", ss.str().c_str());
+        //TODO Cannot turn on debug log.
+        RCLCPP_INFO(logger_, "The sampled random joint values are:\n%s\n", ss.str().c_str());
 
         // Randomize the initial seed state of the robot before solving IK
         robot_state_->setToRandomPositions(joint_model_group_, generator_);
